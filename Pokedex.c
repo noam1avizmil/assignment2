@@ -13,11 +13,11 @@ int find_type_index(PokemoneList* types, int count, char* type) {
     return -1;
 }
 
-ResultStatus main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
     int numberofTypes = atoi(argv[1]);
     int numberofPokemons = atoi(argv[2]);
     FILE * config_file = fopen(argv[3], "r");
-    if (config_file == NULL){return failure;}
+    if (config_file == NULL){return 1;}
     char buffer[300];
     fgets(buffer, sizeof(buffer), config_file);
     PokemoneList* types = (PokemoneList*)malloc(numberofTypes*sizeof(PokemoneList));
@@ -71,6 +71,10 @@ ResultStatus main(int argc, char* argv[]) {
         p_idx++;
     }
     fclose(config_file);
+    free(types);
+    free(pokemons);
+    return 0;
+
 
 
 

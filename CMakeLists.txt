@@ -9,6 +9,8 @@ add_executable(Pokedex
         Pokemon.c
         Pokemon.h
         Defs.h
+        Pokemon.h
+        Pokemon.c
 )
 
 # Optional: Add compiler warnings
