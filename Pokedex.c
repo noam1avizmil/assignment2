@@ -44,7 +44,35 @@ ResultStatus main(int argc, char* argv[]) {
                 effective_against_me_i = strtok(NULL,",");
             }
         }
+        else if (strstr(buffer, "effective-against-others:")) {
+            char* source = strtok(buffer," ");
+            strtok(NULL,":");
+            char* effective_against_others = strtok(NULL,"\n");
+            int s_idx = find_type_index(types, numberofTypes, source);
+            char* effective_against_others_i = strtok(effective_against_others,",");
+            while (effective_against_others_i != NULL) {
+                int e_idx = find_type_index(types, numberofTypes, effective_against_others_i);
+                addEffectiveAgainstOthers(&types[s_idx], &types[e_idx]);
+                effective_against_others_i = strtok(NULL,",");
+            }
+        }
     }
+    int p_idx = 0;
+    while (fgets(buffer,sizeof(buffer),config_file) != NULL && p_idx < numberofPokemons) {
+        char* name = strtok(buffer,",");
+        char* specie = strtok(NULL,",");
+        float height = atof(strtok(NULL,","));
+        float weight = atof(strtok(NULL, ","));
+        int attack = atoi(strtok(NULL, ","));
+        char* type = strtok(NULL, ",\n");
+        init_pokemon(&pokemons[p_idx],name,specie,type,height,weight,attack);
+        int t_idx = find_type_index(types, numberofTypes, type);
+        if (t_idx >= 0){types[t_idx].p_type_count++;}
+        p_idx++;
+    }
+    fclose(config_file);
+
+
 
 
 
