@@ -6,6 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Defs.h"
+int find_type_index(PokemoneList* types, int count, char* type) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(types[i].type_name, type) == 0) {return i;}
+    }
+    return -1;
+}
 
 ResultStatus main(int argc, char* argv[]) {
     int numberofTypes = atoi(argv[1]);
@@ -24,7 +30,19 @@ ResultStatus main(int argc, char* argv[]) {
     curr++;
     curr_type = strtok(NULL,",\n");//null to go from where we left.
     }
-
+    while(fgets(buffer,sizeof(buffer),config_file) != NULL) {
+        if (strstr(buffer, "Pokemons")){break;}
+        if (strstr(buffer, "effective-against-me:")) {
+            char* source = strtok(buffer," ");
+            strtok(NULL,":");
+            char* effective_against_me = strtok(NULL,"\n");
+            int s_idx = find_type_index(types, numberofTypes, source);
+            while (effective_against_me != NULL) {
+                int e_idx = find_type_index(types, numberofTypes, effective_against_me);
+                addEffectiveAgainstMe(&types[s_idx], &types[e_idx]);
+            }
+        }
+    }
 
 
 
