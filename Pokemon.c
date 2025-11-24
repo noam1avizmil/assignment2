@@ -18,22 +18,24 @@ ResultStatus init_pokemon(Pokemone* pokemon, char* name, char* specie, char* typ
   strcpy(pokemon->type, type);
   return success;
 }
+//Bio initializer
 void BioCreate(Bio_info *bio, float height, float weight, int attack){
   bio->attack = attack;
   bio->weight = weight;
   bio->height = height;
 
 }
+//prints bio
 ResultStatus printBio(Bio_info* bio){
   printf("Height: %.2f m    Weight: %.2f kg    Attack: %d\n\n", bio->height,bio->weight,bio->attack);
   return success;
 }
+//prints pokemon
 ResultStatus PrintPokemon(Pokemone* pokemon){
   printf("%s :\n", pokemon->name);
   printf("%s, %s Type.\n", pokemon->specie,pokemon->type);
   ResultStatus x = printBio(&pokemon->bio);
-  if (x == success){return success;}
-  else{return failure;}
+  return x;
 }
 void delete_pokemon(Pokemone* pokemon){
 free(pokemon->name);
@@ -159,7 +161,7 @@ ResultStatus PrintPokemonList(PokemoneList* pokemonList){
         printf("\n");
       }
       if (pokemonList->count_against_others != 0){
-        printf("\n\t%s moves are super-effective against:",pokemonList->type_name);
+        printf("\t%s moves are super-effective against:",pokemonList->type_name);
         for(int i = 0; i < pokemonList->count_against_others; i++){
              printf("%s", pokemonList->effective_against_others[i]->type_name);
              if (i != pokemonList->count_against_others - 1){

@@ -1,0 +1,230 @@
+=================================================
+EDGE CASES TEST PLAN FOR POKEDEX
+=================================================
+
+Test 1: Invalid Menu Input
+---------------------------
+Input: i, k, 0, 10, -1, abc
+Expected: "Please choose a valid number." for each
+Status: [ ] PASS  [ ] FAIL
+
+Test 2: Non-existent Type Name (Option 3)
+------------------------------------------
+Input: 3 → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 3: Non-existent Type to Add (Option 3)
+--------------------------------------------
+Input: 3 → Fire → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 4: Type Already Exists in List (Option 3)
+-----------------------------------------------
+Input: 3 → Fire → Water (Water already in Fire's list)
+Expected: "This type already exist in the list."
+Status: [ ] PASS  [ ] FAIL
+
+Test 5: Successfully Add Type (Option 3)
+-----------------------------------------
+Input: 3 → Fire → Ice
+Expected: Print Fire type with Ice added to effective-against-me
+Status: [ ] PASS  [ ] FAIL
+
+Test 6: Non-existent Type Name (Option 4)
+------------------------------------------
+Input: 4 → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 7: Non-existent Type to Add (Option 4)
+--------------------------------------------
+Input: 4 → Fire → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 8: Type Already Exists in List (Option 4)
+-----------------------------------------------
+Input: 4 → Fire → Grass (Grass already in Fire's list)
+Expected: "This type already exist in the list."
+Status: [ ] PASS  [ ] FAIL
+
+Test 9: Successfully Add Type (Option 4)
+-----------------------------------------
+Input: 4 → Water → Grass
+Expected: Print Water type with Grass added to effective-against-others
+Status: [ ] PASS  [ ] FAIL
+
+Test 10: Non-existent Type Name (Option 5)
+-------------------------------------------
+Input: 5 → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 11: Type Not in List (Option 5)
+-------------------------------------
+Input: 5 → Fire → NotExist
+Expected: "Type name doesn't exist in the list."
+Status: [ ] PASS  [ ] FAIL
+
+Test 12: Successfully Remove Type (Option 5)
+---------------------------------------------
+Input: 5 → Fire → Water
+Expected: Print Fire type without Water in effective-against-me
+Status: [ ] PASS  [ ] FAIL
+
+Test 13: Remove All Types from List (Option 5)
+-----------------------------------------------
+Input: Remove all types one by one from Fire's effective-against-me
+Expected: Eventually empty list, type still prints with no "These types are..." line
+Status: [ ] PASS  [ ] FAIL
+
+Test 14: Non-existent Type Name (Option 6)
+-------------------------------------------
+Input: 6 → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 15: Type Not in List (Option 6)
+-------------------------------------
+Input: 6 → Fire → NotExist
+Expected: "Type name doesn't exist in the list."
+Status: [ ] PASS  [ ] FAIL
+
+Test 16: Successfully Remove Type (Option 6)
+---------------------------------------------
+Input: 6 → Fire → Grass
+Expected: Print Fire type without Grass in effective-against-others
+Status: [ ] PASS  [ ] FAIL
+
+Test 17: Remove All Types from List (Option 6)
+-----------------------------------------------
+Input: Remove all types one by one from Fire's effective-against-others
+Expected: Eventually empty list, type still prints with no "...moves are..." line
+Status: [ ] PASS  [ ] FAIL
+
+Test 18: Non-existent Pokemon Name (Option 7)
+----------------------------------------------
+Input: 7 → NotExist
+Expected: "The Pokemon doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 19: Pokemon Name Case Sensitivity (Option 7)
+--------------------------------------------------
+Input: 7 → pikachu (lowercase)
+Expected: "The Pokemon doesn't exist." (case sensitive)
+Status: [ ] PASS  [ ] FAIL
+
+Test 20: First Pokemon with Duplicate Name (Option 7)
+------------------------------------------------------
+Input: If two Pikachu exist, option 7 → Pikachu
+Expected: Print ONLY the first one
+Status: [ ] PASS  [ ] FAIL
+
+Test 21: Valid Pokemon Name (Option 7)
+---------------------------------------
+Input: 7 → Pikachu
+Expected: Print Pikachu's details
+Status: [ ] PASS  [ ] FAIL
+
+Test 22: Non-existent Type (Option 8)
+--------------------------------------
+Input: 8 → NotExist
+Expected: "Type name doesn't exist."
+Status: [ ] PASS  [ ] FAIL
+
+Test 23: Type with Zero Pokemons (Option 8)
+--------------------------------------------
+Input: 8 → Grass (if no Grass pokemons exist)
+Expected: "There are no Pokemons with this type."
+Status: [ ] PASS  [ ] FAIL
+
+Test 24: Type with One Pokemon (Option 8)
+------------------------------------------
+Input: 8 → Electric (1 pokemon)
+Expected: "There are 1 Pokemons with this type:" + print pokemon
+Status: [ ] PASS  [ ] FAIL
+
+Test 25: Type with Multiple Pokemons (Option 8)
+------------------------------------------------
+Input: 8 → Fire
+Expected: "There are 2 Pokemons with this type:" + print all Fire pokemons
+Status: [ ] PASS  [ ] FAIL
+
+Test 26: Print All Pokemons (Option 1)
+---------------------------------------
+Input: 1
+Expected: All pokemons printed in config file order
+Status: [ ] PASS  [ ] FAIL
+
+Test 27: Print All Types (Option 2)
+------------------------------------
+Input: 2
+Expected: All types printed in config file order
+Status: [ ] PASS  [ ] FAIL
+
+Test 28: Exit Immediately (Option 9)
+-------------------------------------
+Input: 9
+Expected: "All the memory cleaned and the program is safely closed." + exit
+Status: [ ] PASS  [ ] FAIL
+
+Test 29: Multiple Operations Then Exit
+---------------------------------------
+Input: 1 → 2 → 3 → Fire → Ice → 9
+Expected: All operations execute, then clean exit
+Status: [ ] PASS  [ ] FAIL
+
+Test 30: Memory Leak Check
+---------------------------
+Run: valgrind ./Pokedex 6 15 config_txt/ExampleRun_Data.txt
+Input: 1 → 2 → 9
+Expected: "All heap blocks were freed -- no leaks are possible"
+Status: [ ] PASS  [ ] FAIL
+
+=================================================
+BOUNDARY TESTS
+=================================================
+
+Test 31: Empty Type Lists
+--------------------------
+Create type with no effective-against relationships
+Expected: Type prints with only "Type X -- N pokemons" line
+Status: [ ] PASS  [ ] FAIL
+
+Test 32: Long Pokemon/Type Names (299 chars)
+---------------------------------------------
+Input names close to 300 char buffer limit
+Expected: All operations work correctly
+Status: [ ] PASS  [ ] FAIL
+
+Test 33: Add to List Then Immediately Remove
+---------------------------------------------
+Input: 3 → Fire → Ice, then 5 → Fire → Ice
+Expected: Add succeeds, remove succeeds, Fire back to original
+Status: [ ] PASS  [ ] FAIL
+
+Test 34: Chain Multiple Adds
+-----------------------------
+Input: 3 → Fire → Ice, 3 → Fire → Electric, 3 → Fire → Ground
+Expected: All added, Fire's list grows properly
+Status: [ ] PASS  [ ] FAIL
+
+Test 35: Special Characters in Input
+-------------------------------------
+Input: 7 → Pikachu!@#
+Expected: "The Pokemon doesn't exist." (no special chars in names)
+Status: [ ] PASS  [ ] FAIL
+
+=================================================
+NOTES FOR MANUAL TESTING:
+=================================================
+
+1. Compile with warnings: cc -Wall -Wextra Pokedex.c Pokemon.c -o Pokedex
+2. Run with valgrind: valgrind --leak-check=full ./Pokedex 6 15 config_txt/ExampleRun_Data.txt
+3. Compare output with config_txt/ExampleRun.txt
+4. Check formatting: spaces, tabs, newlines, commas
+5. Verify pokemon count in types updates correctly
+
+=================================================

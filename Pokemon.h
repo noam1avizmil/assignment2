@@ -32,7 +32,7 @@ typedef struct type {
   int p_type_count;
 
 } PokemoneList;
-
+//Function declerations
 ResultStatus init_pokemon(Pokemone* pokemon, char* name, char* specie, char* type,float height, float weight, int attack);
 ResultStatus PrintPokemon(Pokemone* pokemon);
 void delete_pokemon(Pokemone* pokemon);

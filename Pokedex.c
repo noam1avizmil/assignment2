@@ -21,48 +21,75 @@ int main(int argc, char* argv[]) {
     char buffer[300];
     fgets(buffer, sizeof(buffer), config_file);
     PokemoneList* types = (PokemoneList*)malloc(numberofTypes*sizeof(PokemoneList));
-    if (types == NULL){fclose(config_file);return 1;}
+    if (types == NULL){printf("Memory Problem\n");fclose(config_file);return 1;}
     Pokemone* pokemons = (Pokemone*)malloc(numberofPokemons*sizeof(Pokemone));
     if (pokemons == NULL) {
         for (int i = 0; i < numberofTypes; i++) {
             DeleteList(&types[i]);
         }
+        printf("Memory Problem\n");
         free(types);
         fclose(config_file);
         return 1;
     }
     fgets(buffer,sizeof(buffer), config_file);
-    char* curr_type = strtok(buffer,",\n"); //array of types
+    char* curr_type = strtok(buffer," ,\n"); //array of types
     int curr = 0;
     while(curr_type != NULL && curr < numberofTypes){
-        init_pokemonList(&types[curr],curr_type);
+        if (init_pokemonList(&types[curr],curr_type) == failure) {
+            printf("Memory Problem\n");
+            for (int i = 0; i < curr; i++) {
+                DeleteList(&types[i]);
+            }
+            free(types);
+            free(pokemons);
+            fclose(config_file);
+            return 1;
+        }
         curr++;
-        curr_type = strtok(NULL,",\n");//null to go from where we left.
+        curr_type = strtok(NULL," ,\n");//null to go from where we left.
     }
     while(fgets(buffer,sizeof(buffer),config_file) != NULL) {
         if (strstr(buffer, "Pokemons")){break;}
         if (strstr(buffer, "effective-against-me:")) {
-            char* source = strtok(buffer," ");
+            char* source = strtok(buffer," \t");
             strtok(NULL,":");
             char* effective_against_me = strtok(NULL,"\n");
             int s_idx = find_type_index(types, numberofTypes, source);
-            char* effective_against_me_i = strtok(effective_against_me,",");
+            char* effective_against_me_i = strtok(effective_against_me," ,");
             while (effective_against_me_i != NULL) {
                 int e_idx = find_type_index(types, numberofTypes, effective_against_me_i);
-                addEffectiveAgainstMe(&types[s_idx], &types[e_idx]);
-                effective_against_me_i = strtok(NULL,",");
+                if (addEffectiveAgainstMe(&types[s_idx], &types[e_idx]) == failure) {
+                    printf("Memory Problem\n");
+                    for (int i = 0; i < numberofTypes; i++) {
+                        DeleteList(&types[i]);
+                    }
+                    free(types);
+                    free(pokemons);
+                    fclose(config_file);
+                    return 1;
+                }
+                effective_against_me_i = strtok(NULL," ,");
             }
         }
-        else if (strstr(buffer, "effective-against-others:")) {
-            char* source = strtok(buffer," ");
+        else if (strstr(buffer, "effective-against-other:")) {
+            char* source = strtok(buffer," \t");
             strtok(NULL,":");
             char* effective_against_others = strtok(NULL,"\n");
             int s_idx = find_type_index(types, numberofTypes, source);
-            char* effective_against_others_i = strtok(effective_against_others,",");
+            char* effective_against_others_i = strtok(effective_against_others," ,");
             while (effective_against_others_i != NULL) {
                 int e_idx = find_type_index(types, numberofTypes, effective_against_others_i);
-                addEffectiveAgainstOthers(&types[s_idx], &types[e_idx]);
-                effective_against_others_i = strtok(NULL,",");
+                if (addEffectiveAgainstOthers(&types[s_idx], &types[e_idx]) == failure) {
+                    printf("Memory Problem\n");
+                    for (int i = 0; i < numberofTypes; i++) {
+                        DeleteList(&types[i]);
+                    }
+                    free(types);
+                    free(pokemons);
+                    fclose(config_file);
+                    return 1;
+                effective_against_others_i = strtok(NULL," ,");
             }
         }
     }
@@ -74,7 +101,19 @@ int main(int argc, char* argv[]) {
         float weight = atof(strtok(NULL, ","));
         int attack = atoi(strtok(NULL, ","));
         char* type = strtok(NULL, ",\n");
-        init_pokemon(&pokemons[p_idx],name,specie,type,height,weight,attack);
+        if (init_pokemon(&pokemons[p_idx],name,specie,type,height,weight,attack) == failure) {
+            printf("Memory Problem\n");
+            for (int i = 0; i < p_idx; i++) {
+                delete_pokemon(&pokemons[i]);
+            }
+            free(pokemons);
+            for (int i = 0; i < numberofTypes; i++) {
+                DeleteList(&types[i]);
+            }
+            free(types);
+            fclose(config_file);
+            return 1;
+        }
         int t_idx = find_type_index(types, numberofTypes, type);
         if (t_idx >= 0){types[t_idx].p_type_count++;}
         p_idx++;
