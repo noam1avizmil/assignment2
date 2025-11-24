@@ -14,6 +14,7 @@ int find_type_index(PokemoneList* types, int count, char* type) {
 }
 
 int main(int argc, char* argv[]) {
+    const char* DELIMS = " \t\r\n,";
     int numberofTypes = atoi(argv[1]);
     int numberofPokemons = atoi(argv[2]);
     FILE * config_file = fopen(argv[3], "r");
@@ -24,56 +25,56 @@ int main(int argc, char* argv[]) {
     if (types == NULL){fclose(config_file);return 1;}
     Pokemone* pokemons = (Pokemone*)malloc(numberofPokemons*sizeof(Pokemone));
     if (pokemons == NULL) {
-        for (int i = 0; i < numberofTypes; i++) {
-            DeleteList(&types[i]);
-        }
+        printf("Memory Problem\n");
         free(types);
         fclose(config_file);
         return 1;
     }
     fgets(buffer,sizeof(buffer), config_file);
-    char* curr_type = strtok(buffer," ,\n"); //array of types
+    char* curr_type = strtok(buffer,DELIMS);
     int curr = 0;
     while(curr_type != NULL && curr < numberofTypes){
         init_pokemonList(&types[curr],curr_type);
         curr++;
-        curr_type = strtok(NULL," ,\n");//null to go from where we left.
+        curr_type = strtok(NULL,DELIMS);
     }
     while(fgets(buffer,sizeof(buffer),config_file) != NULL) {
         if (strstr(buffer, "Pokemons")){break;}
         if (strstr(buffer, "effective-against-me:")) {
-            char* source = strtok(buffer," \t");
+            char* source = strtok(buffer,DELIMS);
             strtok(NULL,":");
-            char* effective_against_me = strtok(NULL,"\n");
             int s_idx = find_type_index(types, numberofTypes, source);
-            char* effective_against_me_i = strtok(effective_against_me," ,");
+            char* effective_against_me_i = strtok(NULL,DELIMS);
             while (effective_against_me_i != NULL) {
                 int e_idx = find_type_index(types, numberofTypes, effective_against_me_i);
-                addEffectiveAgainstMe(&types[s_idx], &types[e_idx]);
-                effective_against_me_i = strtok(NULL," ,");
+                if (s_idx != -1 && e_idx != -1) {
+                    addEffectiveAgainstMe(&types[s_idx], &types[e_idx]);
+                }
+                effective_against_me_i = strtok(NULL,DELIMS);
             }
         }
         else if (strstr(buffer, "effective-against-other:")) {
-            char* source = strtok(buffer," \t");
+            char* source = strtok(buffer,DELIMS);
             strtok(NULL,":");
-            char* effective_against_others = strtok(NULL,"\n");
             int s_idx = find_type_index(types, numberofTypes, source);
-            char* effective_against_others_i = strtok(effective_against_others," ,");
+            char* effective_against_others_i = strtok(NULL,DELIMS);
             while (effective_against_others_i != NULL) {
                 int e_idx = find_type_index(types, numberofTypes, effective_against_others_i);
-                addEffectiveAgainstOthers(&types[s_idx], &types[e_idx]);
-                effective_against_others_i = strtok(NULL," ,");
+                if (s_idx != -1 && e_idx != -1) {
+                    addEffectiveAgainstOthers(&types[s_idx], &types[e_idx]);
+                }
+                effective_against_others_i = strtok(NULL,DELIMS);
             }
         }
     }
     int p_idx = 0;
     while (fgets(buffer,sizeof(buffer),config_file) != NULL && p_idx < numberofPokemons) {
-        char* name = strtok(buffer,",");
-        char* specie = strtok(NULL,",");
-        float height = atof(strtok(NULL,","));
-        float weight = atof(strtok(NULL, ","));
-        int attack = atoi(strtok(NULL, ","));
-        char* type = strtok(NULL, ",\n");
+        char* name = strtok(buffer,DELIMS);
+        char* specie = strtok(NULL,DELIMS);
+        float height = atof(strtok(NULL,DELIMS));
+        float weight = atof(strtok(NULL,DELIMS));
+        int attack = atoi(strtok(NULL,DELIMS));
+        char* type = strtok(NULL,DELIMS);
         init_pokemon(&pokemons[p_idx],name,specie,type,height,weight,attack);
         int t_idx = find_type_index(types, numberofTypes, type);
         if (t_idx >= 0){types[t_idx].p_type_count++;}
@@ -82,6 +83,7 @@ int main(int argc, char* argv[]) {
     fclose(config_file);
     //menu
     int c = 0;
+    int ch;
     char word[300];
     while (c!=9) {
         printf("Please choose one of the following numbers:\n");
@@ -89,11 +91,12 @@ int main(int argc, char* argv[]) {
         printf("5 : Remove type from effective against me list\n6 : Remove type from effective against others list\n7 : Print Pokemon by name\n8 : Print Pokemons by type\n");
         printf("9 : Exit\n");
         if (scanf("%d",&c)!= 1 || c<1||c>9) {
-            while (getchar()!='\n');
+            if (feof(stdin)) break;
+            while ((ch = getchar()) != '\n' && ch != EOF);
             printf("Please choose a valid number.\n");
             continue;
         }
-        while (getchar()!='\n');
+        while ((ch = getchar()) != '\n' && ch != EOF);
         if (c==9) {
 
             break;
@@ -111,12 +114,12 @@ int main(int argc, char* argv[]) {
         if (c==3) {
             printf("Please enter type name:\n");
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int idx = find_type_index(types, numberofTypes, word);
             if (idx == -1){printf("Type name doesn't exist.\n");continue;}
             printf("Please enter type name to add to %s effective against me list:\n", word);
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int add_idx = find_type_index(types, numberofTypes, word);
             if (add_idx == -1){printf("Type name doesn't exist.\n");continue;}
             bool is_exist = 0;
@@ -130,12 +133,12 @@ int main(int argc, char* argv[]) {
         if (c==4) {
             printf("Please enter type name:\n");
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int idx = find_type_index(types, numberofTypes, word);
             if (idx == -1){printf("Type name doesn't exist.\n");continue;}
             printf("Please enter type name to add to %s effective against others list:\n", word);
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int add_idx = find_type_index(types, numberofTypes, word);
             if (add_idx == -1){printf("Type name doesn't exist.\n");continue;}
             bool is_exist = false;
@@ -149,12 +152,12 @@ int main(int argc, char* argv[]) {
         if (c==5) {
             printf("Please enter type name:\n");
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int idx = find_type_index(types, numberofTypes, word);
             if (idx == -1){printf("Type name doesn't exist.\n");continue;}
             printf("Please enter type name to remove from %s effective against me list:\n", word);
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             ResultStatus result =DeleteAgainstMe(&types[idx], word);
             if (result == failure){printf("Type name doesn't exist in the list.\n");}
             else{PrintPokemonList(&types[idx]);}
@@ -162,12 +165,12 @@ int main(int argc, char* argv[]) {
         if (c==6) {
             printf("Please enter type name:\n");
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int idx = find_type_index(types, numberofTypes, word);
             if (idx == -1){printf("Type name doesn't exist.\n");continue;}
             printf("Please enter type name to remove from %s effective against others list:\n", word);
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             ResultStatus result =DeleteAgainstOthers(&types[idx], word);
             if (result == failure){printf("Type name doesn't exist in the list.\n");}
             else{PrintPokemonList(&types[idx]);}
@@ -175,7 +178,7 @@ int main(int argc, char* argv[]) {
         if (c==7) {
             printf("Please enter Pokemon name:\n");
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             bool is_found = false;
             for (int i = 0; i < numberofPokemons; i++) {
                 if (strcmp(pokemons[i].name,word)==0) {
@@ -189,7 +192,7 @@ int main(int argc, char* argv[]) {
         if (c==8) {
             printf("Please enter type name:\n");
             scanf("%s",word);
-            while (getchar()!='\n');
+            while ((ch = getchar()) != '\n' && ch != EOF);
             int idx = find_type_index(types, numberofTypes, word);
             if (idx == -1){printf("Type name doesn't exist.\n");continue;}
             int counter = 0;
