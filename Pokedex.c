@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         printf("Please choose one of the following numbers:\n");
         printf("1 : Print all Pokemons\n2 : Print all Pokemons types\n3 : Add type to effective against me list\n4 : Add type to effective against others list\n");
         printf("5 : Remove type from effective against me list\n6 : Remove type from effective against others list\n7 : Print Pokemon by name\n8 : Print Pokemons by type\n");
-        printf("9 : Exit");
+        printf("9 : Exit\n");
         if (scanf("%d",&c)!= 1 || c<1||c>9) {
             while (getchar()!='\n');
             printf("Please choose a valid number.\n");
@@ -207,9 +207,8 @@ int main(int argc, char* argv[]) {
             }
 
         }
-
-
     }
+    printf("All the memory cleaned and the program is safely closed.\n");
     for (int i = 0; i < numberofPokemons; i++) {
         delete_pokemon(&pokemons[i]);
     }
@@ -222,10 +221,3 @@ int main(int argc, char* argv[]) {
 }
 
 
-
-
-
-
-
-
-}
