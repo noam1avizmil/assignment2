@@ -37,9 +37,11 @@ ResultStatus main(int argc, char* argv[]) {
             strtok(NULL,":");
             char* effective_against_me = strtok(NULL,"\n");
             int s_idx = find_type_index(types, numberofTypes, source);
-            while (effective_against_me != NULL) {
-                int e_idx = find_type_index(types, numberofTypes, effective_against_me);
+            char* effective_against_me_i = strtok(effective_against_me,",");
+            while (effective_against_me_i != NULL) {
+                int e_idx = find_type_index(types, numberofTypes, effective_against_me_i);
                 addEffectiveAgainstMe(&types[s_idx], &types[e_idx]);
+                effective_against_me_i = strtok(NULL,",");
             }
         }
     }
