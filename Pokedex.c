@@ -26,9 +26,9 @@ ResultStatus main(int argc, char* argv[]) {
     char* curr_type = strtok(buffer,",\n"); //array of types
     int curr = 0;
     while(curr_type != NULL && curr < numberofTypes){
-    init_pokemonList(&types[curr],curr_type);
-    curr++;
-    curr_type = strtok(NULL,",\n");//null to go from where we left.
+        init_pokemonList(&types[curr],curr_type);
+        curr++;
+        curr_type = strtok(NULL,",\n");//null to go from where we left.
     }
     while(fgets(buffer,sizeof(buffer),config_file) != NULL) {
         if (strstr(buffer, "Pokemons")){break;}

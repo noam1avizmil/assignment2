@@ -147,7 +147,7 @@ ResultStatus DeleteList(PokemoneList* pokemonList){
 }
 ResultStatus PrintPokemonList(PokemoneList* pokemonList){
       printf("Type %s -- %d pokemons\n",pokemonList->type_name,pokemonlist->p_type_count);
-	  if (pokemonList->p_type_count == 0){ResultStatus x = DeleteList(pokemonList); return x;}
+	  //if (pokemonList->p_type_count == 0){ResultStatus x = DeleteList(pokemonList); return x;}
       if(pokemonList->count_against_me != 0){
         printf("\tThese types are super-effective against %s:",pokemonList->type_name);
         for(int i = 0; i < pokemonList->count_against_me; i++){

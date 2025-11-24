@@ -43,6 +43,6 @@ ResultStatus DeleteAgainstMe(PokemoneList* pokemonListA, char* name);
 ResultStatus DeleteAgainstOthers(PokemoneList* pokemonListA, char* name);
 ResultStatus printBio(Bio_info* bio);
 ResultStatus DeleteList(PokemoneList* pokemonList);
-ResultStatus PrintPokemonList(PokemoneList* pokemonList, int poke_count);
+ResultStatus PrintPokemonList(PokemoneList* pokemonList);
 void BioCreate(Bio_info *bio, float height, float weight, int attack);
 #endif //ASSIG2_POKEMON_H
